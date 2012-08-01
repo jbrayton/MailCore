@@ -414,6 +414,15 @@
     return NO;
 }
 
+- (BOOL)isDeleted {
+	struct mail_flags *flags = myMessage->msg_flags;
+	if (flags != NULL) {
+		BOOL flag_flagged = (flags->fl_flags & MAIL_FLAG_DELETED);
+		return flag_flagged;
+	}
+	return NO;
+}
+
 - (BOOL)isNew {
     struct mail_flags *flags = myMessage->msg_flags;
     if (flags != NULL) {
@@ -440,6 +449,10 @@
         return uid;
     }
     return 0;
+}
+
+- (NSString *)uidString {
+	return [NSString stringWithCString:myMessage->msg_uid encoding:NSUTF8StringEncoding];
 }
 
 - (NSUInteger)messageSize {
@@ -588,10 +601,22 @@
 }
 
 - (NSData *)messageAsEmlx {
+    
+    // jb: I changed the encoding types to Mac OS Roman.  They had been UTF8, and there were some messages
+    // that could not be decoded as UTF8.
+    
+    NSString* rfc822 = [self rfc822];
+    if (!rfc822) {
+        return nil;
+    }
     NSString *msgContent = [[self rfc822] stringByReplacingOccurrencesOfString:@"\r\n" withString:@"\n"];
-    NSData *msgContentAsData = [msgContent dataUsingEncoding:NSUTF8StringEncoding];
+    NSData *msgContentAsData = [msgContent dataUsingEncoding:NSMacOSRomanStringEncoding];
+    if ((!msgContent) || (!msgContentAsData)) {
+        self.lastError = MailCoreCreateError(-1, @"Unable to decode message content.");
+        return nil;
+    }
     NSMutableData *emlx = [NSMutableData data];
-    [emlx appendData:[[NSString stringWithFormat:@"%-10d\n", (uint32_t)msgContentAsData.length] dataUsingEncoding:NSUTF8StringEncoding]];
+    [emlx appendData:[[NSString stringWithFormat:@"%-10d\n", (uint32_t)msgContentAsData.length] dataUsingEncoding:NSMacOSRomanStringEncoding]];
     [emlx appendData:msgContentAsData];
 
 
@@ -622,12 +647,13 @@
     return emlx;
 }
 
+
 - (NSString *)rfc822 {
     char *result = NULL;
     NSString *nsresult;
     int r = mailimap_fetch_rfc822([self imapSession], [self sequenceNumber], &result);
     if (r == MAIL_NO_ERROR) {
-        nsresult = [[NSString alloc] initWithCString:result encoding:NSUTF8StringEncoding];
+        nsresult = [[NSString alloc] initWithCString:result encoding:NSMacOSRomanStringEncoding];
     } else {
         self.lastError = MailCoreCreateErrorFromIMAPCode(r);
         return nil;

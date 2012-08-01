@@ -194,6 +194,11 @@ The local timezone is the one set in the device running this code
 */
 - (BOOL)isStarred;
 
+/*!
+ @abstract	Returns YES if the message is deleted.
+ */
+- (BOOL)isDeleted;
+
 /**
  A machine readable ID that is guaranteed unique by the
  host that generated the message
@@ -204,6 +209,8 @@ The local timezone is the one set in the device running this code
  Returns an NSUInteger containing the messages UID. This number is unique across sessions
 */
 - (NSUInteger)uid;
+
+- (NSString *)uidString;
 
 /**
  Returns the message sequence number, this number cannot be used across sessions

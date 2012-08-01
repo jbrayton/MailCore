@@ -44,6 +44,9 @@
 - (id)init {
     self = [super init];
     if (self) {
+        // Fixes problems when running in a sandboxed Mac app.
+        mmap_string_set_tmpdir([NSTemporaryDirectory() cStringUsingEncoding:NSUTF8StringEncoding]);
+        
         connected = NO;
         myStorage = mailstorage_new(NULL);
         assert(myStorage != NULL);
@@ -142,6 +145,45 @@
         mailstorage_disconnect(myStorage);
     }
 }
+
+- (NSDictionary *)foldersWithFlags {
+	struct mailimap_mailbox_list * mailboxStruct;
+	clist *allList;
+	clistiter *cur;
+	
+	NSString *mailboxName;
+	int err;
+	
+	//Now, fill the all folders array
+	//TODO Fix this so it doesn't use *
+	err = mailimap_xlist([self session], "", "*", &allList);
+	if (err != MAIL_NO_ERROR) {
+        self.lastError = MailCoreCreateErrorFromIMAPCode(err);
+		return nil;
+	} else if (clist_isempty(allList)) {
+        self.lastError = MailCoreCreateError(-1, @"foldersWithFlags returned empty list");
+		return nil;
+	}
+    NSMutableDictionary* result = [NSMutableDictionary dictionary];
+	for(cur = clist_begin(allList); cur != NULL; cur = cur->next) {
+		mailboxStruct = cur->data;
+		mailboxName = [NSString stringWithCString:mailboxStruct->mb_name encoding:NSUTF8StringEncoding];
+        struct mailimap_mbx_list_flags* flags = mailboxStruct->mb_flag;
+        if (flags->mbf_sflag != MAILIMAP_MBX_LIST_SFLAG_NOSELECT) {
+            clistiter *cur2;
+            NSMutableSet* flagSet = [NSMutableSet set];
+            for(cur2 = clist_begin(flags->mbf_oflags); cur2 != NULL; cur2 = cur2->next) {
+                struct mailimap_mbx_list_oflag * oflag = clist_content(cur2);
+                NSString* flagString = [NSString stringWithCString:oflag->of_flag_ext encoding:NSUTF8StringEncoding];
+                [flagSet addObject:flagString];
+            }
+            [result setObject:flagSet forKey:mailboxName];
+        }
+	}
+	mailimap_list_result_free(allList);
+	return result;
+}
+
 
 - (CTCoreFolder *)folderWithPath:(NSString *)path {
     CTCoreFolder *folder = [[CTCoreFolder alloc] initWithPath:path inAccount:self];

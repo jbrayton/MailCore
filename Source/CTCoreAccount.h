@@ -95,6 +95,11 @@
 */
 - (void)disconnect;
 
+/*
+  Returns a dictionary of folders and their associated xlist flags. May only work
+  with Google IMAP servers.
+*/
+- (NSDictionary *)foldersWithFlags;
 
 /**
  Sends the idle command to the server.
