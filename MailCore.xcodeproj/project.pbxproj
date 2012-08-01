@@ -271,7 +271,7 @@
 		F88CA0CD0BF7A7B00055AC29 /* CTSMTP.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CTSMTP.m; path = Source/CTSMTP.m; sourceTree = "<group>"; };
 		F88CA0D20BF7AC0B0055AC29 /* CTESMTP.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CTESMTP.h; path = Source/CTESMTP.h; sourceTree = "<group>"; };
 		F88CA0D30BF7AC0B0055AC29 /* CTESMTP.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CTESMTP.m; path = Source/CTESMTP.m; sourceTree = "<group>"; };
-		F890D38D10CEECD50039817C /* libetpan.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = libetpan.xcodeproj; path = "libetpan/build-mac/libetpan.xcodeproj"; sourceTree = SOURCE_ROOT; };
+		F890D38D10CEECD50039817C /* libetpan.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = libetpan.xcodeproj; path = "../libetpan/build-mac/libetpan.xcodeproj"; sourceTree = SOURCE_ROOT; };
 		F8D31A3109C524EA00468234 /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		F8DFAB0410541708003D3CC1 /* libetpan.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = libetpan.framework; path = "OpenSourceProjects/libetpan-0.58/build-mac/build/Release/libetpan.framework"; sourceTree = "<group>"; };
 		F8DFCF4915801A5000C01975 /* Tests.octest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = Tests.octest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -1017,7 +1017,7 @@
 				GCC_TREAT_WARNINGS_AS_ERRORS = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				HEADER_SEARCH_PATHS = "libetpan/build-mac/include/**";
+				HEADER_SEARCH_PATHS = "../libetpan/build-mac/include/**";
 				LIBRARY_SEARCH_PATHS = "";
 				MACOSX_DEPLOYMENT_TARGET = 10.6;
 				SDKROOT = macosx;
@@ -1033,7 +1033,7 @@
 				GCC_TREAT_WARNINGS_AS_ERRORS = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				HEADER_SEARCH_PATHS = "libetpan/build-mac/include/**";
+				HEADER_SEARCH_PATHS = "../libetpan/build-mac/include/**";
 				LIBRARY_SEARCH_PATHS = "";
 				MACOSX_DEPLOYMENT_TARGET = 10.6;
 				SDKROOT = macosx;
