@@ -156,7 +156,7 @@
 	
 	//Now, fill the all folders array
 	//TODO Fix this so it doesn't use *
-	err = mailimap_xlist([self session], "", "*", &allList);
+	err = mailimap_list([self session], "", "*", &allList);
 	if (err != MAIL_NO_ERROR) {
         self.lastError = MailCoreCreateErrorFromIMAPCode(err);
 		return nil;
